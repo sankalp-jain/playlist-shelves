@@ -200,7 +200,8 @@
     const statNodes = browse.querySelectorAll(
       'ytd-playlist-header-renderer .metadata-stats yt-formatted-string, ' +
         'ytd-playlist-header-renderer .byline-item, ' +
-        'ytd-playlist-sidebar-primary-info-renderer #stats yt-formatted-string'
+        'ytd-playlist-sidebar-primary-info-renderer #stats yt-formatted-string, ' +
+        'yt-page-header-renderer yt-content-metadata-view-model span'
     );
 
     const counts = [];
@@ -297,6 +298,7 @@
 
     const titleEl =
       renderer.querySelector('a#video-title') ||
+      renderer.querySelector('a.ytLockupMetadataViewModelTitle') ||
       renderer.querySelector('h3 a') ||
       renderer.querySelector('#video-title');
 
@@ -326,7 +328,8 @@
       renderer.querySelector('ytd-channel-name yt-formatted-string#text') ||
       renderer.querySelector('#channel-name a') ||
       renderer.querySelector('#byline-container a') ||
-      renderer.querySelector('#byline-container #text');
+      renderer.querySelector('#byline-container #text') ||
+      renderer.querySelector('yt-content-metadata-view-model a[href^="/@"], yt-content-metadata-view-model a[href^="/channel/"]');
 
     const channel = (channelEl?.textContent || '')
       .replace(/\s+/g, ' ')
@@ -415,7 +418,7 @@
 
     const renderRoot = containers.contents || containers.listRenderer || containers.browse;
     const renderers = renderRoot.querySelectorAll(
-      'ytd-playlist-video-renderer, ytd-playlist-panel-video-renderer'
+      'ytd-playlist-video-renderer, ytd-playlist-panel-video-renderer, yt-lockup-view-model:has(a[href*="list="])'
     );
 
     const byId = new Map();
