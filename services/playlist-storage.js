@@ -47,7 +47,7 @@
   function normalizeSettings(settings = {}) {
     if (!settings || typeof settings !== 'object') settings = {};
     return {
-      sort: settings.sort === 'title' ? 'title' : 'playlist',
+      sort: ['title', 'shuffle'].includes(settings.sort) ? settings.sort : 'playlist',
       showChannel: settings.showChannel !== false
     };
   }

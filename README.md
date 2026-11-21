@@ -8,7 +8,7 @@
 - Render all enabled playlist shelves together at the top of Home.
 - Show YouTube-style video cards with thumbnails, duration, channel, and view metadata when available.
 - Track seen and hidden videos separately for each playlist. Open the three-dot menu to hide a video; hiding it does not change the YouTube playlist.
-- Load more cached cards as you scroll horizontally; configure sort order and channel/view metadata across shelves.
+- Load more cached cards as you scroll horizontally; arrange videos by playlist order, title, or a shuffle order that changes on each page load, and configure channel/view metadata across shelves.
 - View each playlist's cached video count and estimated total watch time.
 - Sync each playlist independently. Complete extractions update only that playlist's cache; failed or incomplete refreshes preserve its previous cache.
 - Keep playlist configuration, cached metadata, and preferences in `chrome.storage.local`. No external account or service is used by the extension.

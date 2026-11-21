@@ -20,6 +20,8 @@
   const SVG_NS = 'http://www.w3.org/2000/svg';
   const MOUNT_DEBOUNCE_MS = 50;
   const CARD_BATCH_SIZE = 12;
+  // One random seed per page load: stable through rerenders, fresh on reload.
+  const pageShuffleSeed = Math.floor(Math.random() * 0x100000000);
 
   let configuredPlaylists = Storage.DEFAULT_PLAYLISTS.map((item) => ({ ...item }));
   const playlistCaches = new Map();
@@ -116,6 +118,15 @@
   function durationSeconds(value) {
     if (typeof value !== 'string' || !/^\d+(?::\d{1,2}){1,2}$/.test(value.trim())) return null;
     return value.trim().split(':').map(Number).reduce((total, part) => total * 60 + part, 0);
+  }
+
+  function shuffleHash(videoId, seed) {
+    let hash = (2166136261 ^ seed) >>> 0;
+    for (let i = 0; i < videoId.length; i += 1) {
+      hash ^= videoId.charCodeAt(i);
+      hash = Math.imul(hash, 16777619) >>> 0;
+    }
+    return hash;
   }
 
   function formatTotalWatchTime(videos) {
@@ -381,7 +392,13 @@
     const visibleVideos = cache.videos.filter((video) => !seenIds.has(video.videoId) && !hiddenIds.has(video.videoId));
     const orderedVideos = cache.settings.sort === 'title'
       ? [...visibleVideos].sort((a, b) => a.title.localeCompare(b.title))
-      : visibleVideos;
+      : cache.settings.sort === 'shuffle'
+        ? [...visibleVideos].sort((a, b) =>
+            shuffleHash(a.videoId, pageShuffleSeed) -
+              shuffleHash(b.videoId, pageShuffleSeed) ||
+            a.videoId.localeCompare(b.videoId)
+          )
+        : visibleVideos;
     const videos = orderedVideos;
     if (videos.length > 0) {
       const count = document.createElement('span');
